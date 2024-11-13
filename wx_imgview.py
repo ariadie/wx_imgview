@@ -10,6 +10,7 @@
 # v1.2 : 20241027 - process dd-mm-yyyy hh:mm:ss
 # v1.3 :
 # v1.4 : 20241109 - one mouse click will not call ocr 
+# v1.5 : 20241113 - fixing error "StaticBitmap has been deleted"
 
 import wx
 import os
@@ -332,12 +333,12 @@ class ImageFrame(wx.Frame):
             self.performOCR()
 
     def onPaint(self, event):
+
+        if self.image_widget:
+            dc = wx.PaintDC(self.image_widget)
+            dc.DrawBitmap(self.image_bitmap, 0, 0, True)
+        
         """Draw the selection rectangle."""
-        dc = wx.PaintDC(self.image_widget)
-        
-        # Redraw the image to keep it visible
-        dc.DrawBitmap(self.image_bitmap, 0, 0, True)
-        
         if self.is_selecting and self.selection_start and self.selection_end:
             dc.SetPen(wx.Pen('blue', 2, wx.PENSTYLE_DOT))
             dc.SetBrush(wx.Brush(wx.TRANSPARENT_BRUSH))
